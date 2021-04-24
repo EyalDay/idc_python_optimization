@@ -1,7 +1,11 @@
 from src.utils import report_step
 import numpy as np
+import logging
 
-def gradient_descent(f, x0, step_size, obj_tol, param_tol,max_iter):
+logger = logging.getLogger(__name__)
+
+
+def gradient_descent(f, x0, step_size, obj_tol, param_tol, max_iter):
     """
     :param f: Function minimized
     :param x0: Starting point
@@ -15,29 +19,34 @@ def gradient_descent(f, x0, step_size, obj_tol, param_tol,max_iter):
     current_point = x0
     iterations = 1
     current_val, grad = f(current_point)
+    X1 = list()
+    X2 = list()
     while True:
+        X1.append(current_point[0])
+        X2.append(current_point[1])
         next_point = current_point - step_size * grad
         next_val, grad = f(next_point)
 
-        report_step(i=iterations,x_i=current_point, x_i_1=next_point, f= f)
+        report_step(i=iterations, x_i=current_point, x_i_1=next_point, f=f)
 
         abs_diff = np.abs(next_val - current_val)
         if abs_diff <= obj_tol:
-           print(f'SUCCESS! Absolute difference in objective function values between two consecutive iterations is {abs_diff}\n' 
-                 f'which is less than the objactive tolerance {obj_tol}' 
-                 f'Took {iterations} iterations')
-           return True, next_point
+            logger.info(
+                f'SUCCESS! Absolute difference in objective function values between two consecutive iterations is {abs_diff}\n'
+                f'which is less than the objactive tolerance {obj_tol}'
+                f'Took {iterations} iterations')
+            return True, next_point, X1, X2
 
-        abs_dist = np.linalg.norm(current_point- next_point)
+        abs_dist = np.linalg.norm(current_point - next_point)
         if abs_dist <= param_tol:
-            print( f'SUCCESS! Distance between two consecutive iterations iteration locations is {abs_dist}\n' 
-                         f'which is less than the objactive tolerance {param_tol}\n' 
-                         f'Took {iterations} iterations')
-            return True, next_point
+            logger.info(f'SUCCESS! Distance between two consecutive iterations iteration locations is {abs_dist}\n'
+                        f'which is less than the objactive tolerance {param_tol}\n'
+                        f'Took {iterations} iterations')
+            return True, next_point, X1, X2
 
         if iterations == max_iter:
-            #return False, f"FAIULRE! Did not converge in {iterations} iterations"
-            return False, next_point
+            logger.info(f"FAIULRE! Did not converge in {iterations} iterations")
+            return False, next_point, X1, X2
 
         iterations += 1
         current_point, current_val = next_point, next_val
