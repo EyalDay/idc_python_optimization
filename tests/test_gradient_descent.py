@@ -52,16 +52,16 @@ class TestGradientDecsent(unittest.TestCase):
         is_sucess, last_point, X1, X2 = gradient_descent(f=func, x0=x_0, step_size=step_size, max_iter=max_iteration,
                                                          obj_tol=obj_tolerance, param_tol=step_tol)
         plot_path_contour(func, FUNC2STR[func], X1, X2)
-        d = {True: 'Success', False: 'Failure'}
+        d = 'Success' if is_sucess else  'Failure'
         logger.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        logger.info(f"Results for function {FUNC2STR[my_linear_func]}: {d[is_sucess]}, last point is {last_point}")
+        logger.info(f"Results for function {FUNC2STR[func]}: {d}, last point is {last_point}")
         logger.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         assert is_sucess
 
     @unittest.expectedFailure
     def test_lin_min(self):
         x_0 = np.array([1, 1])
-        step_size = 0.001
+        step_size = 0.01
         max_iteration = 100
         step_tol = 1e-8
         obj_tolerance = 1e-7
@@ -81,9 +81,9 @@ class TestGradientDecsent(unittest.TestCase):
                                                          max_iter=max_iteration,
                                                          obj_tol=obj_tolerance, param_tol=step_tol)
         plot_path_contour(my_linear_func, FUNC2STR[my_linear_func], X1, X2)
-        d = {True: 'Success', False: 'Failure'}
+        d = 'Success' if is_sucess else  'Failure'
         logger.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        logger.info(f"Results for function {FUNC2STR[my_linear_func]}: {d[is_sucess]}, last point is {last_point}")
+        logger.info(f"Results for function {FUNC2STR[my_linear_func]}: {d}, last point is {last_point}")
         logger.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         assert is_sucess
 
@@ -95,9 +95,8 @@ class TestGradientDecsent(unittest.TestCase):
 
     def test_rosenbrock_min(self):
         x_0 = np.array([2, 2])
-        # x_0 = np.array([1,1])
-        step_size = 0.0001
-        max_iteration = 100000
+        step_size = 0.001
+        max_iteration = 10000
         step_tol = 1e-8
         obj_tolerance = 1e-7
         logger.info(f'Testing function {FUNC2STR[rosenbrock]} with parameters:\n'
@@ -113,11 +112,11 @@ class TestGradientDecsent(unittest.TestCase):
 
         plot_path_contour(rosenbrock, FUNC2STR[rosenbrock], X1, X2)
 
-        d = {True: 'Success', False: 'Failure'}
+        d = 'Success' if is_sucess else  'Failure'
         logger.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        logger.info(f"Results for function {FUNC2STR[rosenbrock]}: {d[is_sucess]}, last point is {last_point}")
+        logger.info(f"Results for function {FUNC2STR[rosenbrock]}: {d}, last point is {last_point}")
         logger.info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        # assert np.allclose(last_point, np.array([1,1]), atol=obj_tolerance)
+        #assert np.allclose(last_point, np.array([1,1]), atol=obj_tolerance)
 
 
 if __name__ == '__main__':

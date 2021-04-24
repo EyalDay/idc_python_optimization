@@ -27,7 +27,7 @@ def gradient_descent(f, x0, step_size, obj_tol, param_tol, max_iter):
         next_point = current_point - step_size * grad
         next_val, grad = f(next_point)
 
-        report_step(i=iterations, x_i=current_point, x_i_1=next_point, f=f)
+        report_step(i=iterations, x_i=current_point, x_i_1=next_point, fxi =current_val, fxi1 = next_val, f=f)
 
         abs_diff = np.abs(next_val - current_val)
         if abs_diff <= obj_tol:
@@ -49,5 +49,7 @@ def gradient_descent(f, x0, step_size, obj_tol, param_tol, max_iter):
             return False, next_point, X1, X2
 
         iterations += 1
+
+
         current_point, current_val = next_point, next_val
     # The success/failure status should be printed toc onsole in human readable form describing the result (which convergence/failure, etc.).

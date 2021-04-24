@@ -1,5 +1,4 @@
 import numpy as np
-from functools import partial
 
 
 def _f(Q, x):
@@ -45,15 +44,14 @@ def f3(x):
     return _f(Q, x)
 
 def rosenbrock(x):
-    # https://www.wolframalpha.com/input/?i=100*%28y-x%5E2%29%5E2%2B%281-x%29%5E2+where+x%3D-1.4%2C+y%3D1.1
     x1, x2 = x
+    a=1
     b = 100
 
     val = b * ((x2 - x1 ** 2) ** 2) + (1- x1) ** 2
 
-    grad1 = 2*(200*np.power(x1,3) - 200 * x1 * x2 -1)
-    grad2 = 200*(x2-x1**2)
-
+    grad1 = 2 * (x1 - a) - 2 * b * x1 *(x2- (x1**2) )
+    grad2 = 2*b*(x2-x1**2)
     return val, np.array([grad1,grad2])
 
 def my_linear_func(x):
