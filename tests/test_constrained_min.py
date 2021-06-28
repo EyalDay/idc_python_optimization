@@ -63,7 +63,6 @@ class TestConstrainedMin(unittest.TestCase):
                                            eq_constraints_mat, eq_constraints_rhs, x0)
 
         pts = [p[0] for p in path]
-        outer_pts = [p[0] for p in path if p[2] == 'outer']
         fig = plt.figure()
         ax = fig.add_subplot(projection='3d', xlim=[0, 1], ylim=[0, 1], zlim=[0, 1])
 
@@ -98,7 +97,8 @@ class TestConstrainedMin(unittest.TestCase):
         ax.set_zlim(-0.1, 1.01)
 
         plt.legend()
-        plt.show()
+        plt.savefig('test_qp.png')
+        #plt.show()
 
     def test_lp(self):
         ineq_constraints = [
@@ -159,5 +159,6 @@ class TestConstrainedMin(unittest.TestCase):
         plt.ylim(*y_lims)
         plt.grid(True, which='both')
         plt.legend()
+        plt.savefig('test_lp.png')
 
-        plt.show()
+        #plt.show()

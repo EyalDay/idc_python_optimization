@@ -86,17 +86,20 @@ def line_search(f, x0, obj_tol, param_tol, max_iter, dir_selection_method='gd', 
     X1 = list()
     X2 = list()
     Y = list()
+    Y.append(current_val)
     while True:
         X1.append(current_point[0])
         X2.append(current_point[1])
-        Y.append(current_val)
+
         pk = dir_func(current_grad=current_grad, current_hess=current_hessian)
         alpha = wolfe_condition(f=f, current_point=current_point, pk=pk, init_step_len=init_step_len,
                                 slope_ratio=slope_ratio, back_track_factor=back_track_factor)
 
         next_point = current_point + alpha * pk
+        #print(f'{next_point} = {current_point} + {alpha} * {pk}')
         next_val, next_grad, next_hess = f(next_point)
-
+        #print(next_val)
+        Y.append(next_val)
         report_step(i=iterations, x_i=current_point, x_i_1=next_point, fxi=current_val, fxi1=next_val, f=f,
                     method=dir_selection_method)
 
@@ -105,15 +108,15 @@ def line_search(f, x0, obj_tol, param_tol, max_iter, dir_selection_method='gd', 
         if abs_diff <= obj_tol:
             logger.info(
                 f'SUCCESS! Absolute difference in objective function values between two consecutive iterations is {abs_diff}\n'
-                f'which is less than the objactive tolerance {obj_tol}'
+                f'which is less than the objactive tolerance {obj_tol}\n'
                 f'Took {iterations} iterations')
             return True, next_point, X1, X2, Y
 
         abs_dist = np.linalg.norm(current_point - next_point)
-        print('abs_dist ', abs_dist, ' param_tol ', param_tol)
+        #print('abs_dist ', abs_dist, ' param_tol ', param_tol)
         if abs_dist <= param_tol:
             logger.info(f'SUCCESS! Distance between two consecutive iterations iteration locations is {abs_dist}\n'
-                        f'which is less than the objactive tolerance {param_tol}\n'
+                        f'which is less than the param tolerance {param_tol}\n'
                         f'Took {iterations} iterations')
             return True, next_point, X1, X2, Y
 

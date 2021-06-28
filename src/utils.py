@@ -21,7 +21,7 @@ FUNC2AX = {
     f1: ([-1.5, 1.5], [-1.5, 1.5]),
     f2: ([-1.1, 1.1], [-1.2, 1.2]),
     f3: ([-1.1, 1.1], [-1.2, 1.2]),
-    rosenbrock: ([-0.5, 3], [-0.5, 3]),
+    rosenbrock: ([1.8, 2.2], [1.8, 4.2]),
     my_linear_func: ([0.9, 3], [-1.1, 1.1])
 }
 
@@ -84,6 +84,8 @@ def plot_path_contour(func, title, P1=None, P2=None, method=None):
 
     ax.scatter(P1, P2, s=2, c=colors)
 
+    ax.scatter(P1[0], P2[0], label='initial point')
+    ax.scatter(P1[-1], P2[-1], label='final point')
     if func == rosenbrock:
         levels = np.sort(np.unique(np.concatenate([np.arange(0, 100, 10), np.arange(100, 800, 30)])))
     elif func == my_linear_func:
@@ -102,11 +104,12 @@ def plot_path_contour(func, title, P1=None, P2=None, method=None):
     ax.set_xlabel('$x_1$')
     ax.set_xlabel('$x_2$')
     global i
+    plt.legend()
     plt.savefig(fname=f'{method}_{i}' + '.png')
     # plt.show()
 
 
-def plot_obj_value(title,method, Y, func=None):
+def plot_obj_value(method, Y, func=None):
     global i
     plt.figure()
     plt.plot(Y)
