@@ -1,0 +1,39 @@
+Testing function 3.c, ￿Rosenbrock with parameters:
+method gd
+initial point [2 2]
+max number of iterations 10000
+step size tolerance 1e-08
+objective function tolerance 1e-07
+method bfgs iteration 1: Locations[2 2] -> [1.99875 3.995  ] Step length = 1.995000391603971 Function values: 401 -> 0.9975015627441403 delta: -400.00249843725584
+method bfgs iteration 2: Locations[1.99875 3.995  ] -> [1.99875    3.99500511] Step length = 5.107201002304889e-06 Function values: 0.9975015627441403 -> 0.9975015573735745 delta: -5.370565769879931e-09
+SUCCESS! Absolute difference in objective function values between two consecutive iterations is 5.370565769879931e-09
+which is less than the objactive tolerance 1e-07Took 2 iterations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Results for function 3.c, ￿Rosenbrock: Success, last point is [1.99875    3.99500511]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Testing function 3.c, ￿Rosenbrock with parameters:
+method nt
+initial point [2 2]
+max number of iterations 10000
+step size tolerance 1e-08
+objective function tolerance 1e-07
+method bfgs iteration 1: Locations[2 2] -> [1.99875 3.995  ] Step length = 1.995000391603971 Function values: 401 -> 0.9975015627441403 delta: -400.00249843725584
+method bfgs iteration 2: Locations[1.99875 3.995  ] -> [1.99875    3.99500511] Step length = 5.107201002304889e-06 Function values: 0.9975015627441403 -> 0.9975015573735745 delta: -5.370565769879931e-09
+SUCCESS! Absolute difference in objective function values between two consecutive iterations is 5.370565769879931e-09
+which is less than the objactive tolerance 1e-07Took 2 iterations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Results for function 3.c, ￿Rosenbrock: Success, last point is [1.99875    3.99500511]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Testing function 3.c, ￿Rosenbrock with parameters:
+method bfgs
+initial point [2 2]
+max number of iterations 10000
+step size tolerance 1e-08
+objective function tolerance 1e-07
+method bfgs iteration 1: Locations[2 2] -> [1.99875 3.995  ] Step length = 1.995000391603971 Function values: 401 -> 0.9975015627441403 delta: -400.00249843725584
+method bfgs iteration 2: Locations[1.99875 3.995  ] -> [1.99875    3.99500511] Step length = 5.107201002304889e-06 Function values: 0.9975015627441403 -> 0.9975015573735745 delta: -5.370565769879931e-09
+SUCCESS! Absolute difference in objective function values between two consecutive iterations is 5.370565769879931e-09
+which is less than the objactive tolerance 1e-07Took 2 iterations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Results for function 3.c, ￿Rosenbrock: Success, last point is [1.99875    3.99500511]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

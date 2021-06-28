@@ -26,7 +26,7 @@ FUNC2AX = {
 }
 
 
-def report_step(i, x_i, x_i_1, fxi, fxi1, f):
+def report_step(i, x_i, x_i_1, fxi, fxi1, f, method):
     """
     :param i: Iteration step
     :param x_i: Location at step i
@@ -43,19 +43,18 @@ def report_step(i, x_i, x_i_1, fxi, fxi1, f):
     step_len = np.linalg.norm(x_i_1 - x_i)
     dfx = fxi1 - fxi
     logger.info(
-        f'iteration {i}: Locations{x_i} -> {x_i_1} Step length = {step_len} Function values: {fxi} -> {fxi1} delta: {dfx}')
+        f'method {method} iteration {i}: Locations{x_i} -> {x_i_1} Step length = {step_len} Function values: {fxi} -> {fxi1} delta: {dfx}')
 
 
 def _get_Z(func):
     x_min, x_max = -2, 2
     y_min, y_max = -2, 2
-    if func ==rosenbrock:
+    if func == rosenbrock:
         x_min, x_max = -2, 5
         y_min, y_max = -2, 5
-    if func ==my_linear_func:
+    if func == my_linear_func:
         x_min, x_max = 0.9, 3.1
-        y_min, y_max = -1.1,1.1
-
+        y_min, y_max = -1.1, 1.1
 
     delta = 0.01
     x1 = np.arange(x_min, x_max, delta)
@@ -65,17 +64,18 @@ def _get_Z(func):
     w, h = Z.shape
     for i in range(w):
         for j in range(h):
-            val, _ = func(np.array([X1[i, j], X2[i, j]]))
+            val, _, _ = func(np.array([X1[i, j], X2[i, j]]), get_hessian=False)
             Z[i, j] = val
 
     return X1, X2, Z
 
 
-def plot_path_contour(func, title, P1=None, P2=None):
+def plot_path_contour(func, title, P1=None, P2=None, method=None):
     """
     path taken by the algorithm should be plotted, overlaid on a plot of function contours
     :return:
     """
+
     X1, X2, Z = _get_Z(func)
 
     colors = cm.jet(np.linspace(0, 1, len(P1)))
@@ -94,15 +94,27 @@ def plot_path_contour(func, title, P1=None, P2=None):
     CS = ax.contour(X1, X2, Z, levels)
 
     ax.clabel(CS, fontsize=9, inline=True)
-    ax.set_title(f'Function {title}')
+    ax.set_title(f'method {method} Function {title}')
     x_lim, y_lim = FUNC2AX[func]
     ax.set_xlim(x_lim)
     ax.set_ylim(y_lim)
 
     ax.set_xlabel('$x_1$')
-    ax.set_ylabel('$x_2$')
+    ax.set_xlabel('$x_2$')
     global i
-    plt.savefig(fname=str(i) + '.png')
+    plt.savefig(fname=f'{method}_{i}' + '.png')
+    # plt.show()
+
+
+def plot_obj_value(title,method, Y, func=None):
+    global i
+    plt.figure()
+    plt.plot(Y)
+    plt.xticks(range(len(Y)))
+
+    plt.xlabel("Iteration number")
+    plt.ylabel("Objective value")
+
+    plt.savefig(fname=f'{method}{func or ""}_{i}_converge' + '.png')
     i += 1
-    plt.show()
 

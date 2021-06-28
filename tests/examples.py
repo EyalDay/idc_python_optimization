@@ -15,7 +15,7 @@ def _f(Q, x, get_hessian=False):
         hessian = Q + Q.T
         return res, derv, hessian
 
-    return res, derv
+    return res, derv, None
 
 
 def f1(x, get_hessian=False):
@@ -69,10 +69,10 @@ def rosenbrock(x, get_hessian=False):
     if get_hessian:
         return val, np.array([grad1, grad2]), np.array( [  [hess00, hess01] ,[hess10, hess11]  ])
 
-    return val, np.array([grad1,grad2])
+    return val, np.array([grad1,grad2]), None
 
 def my_linear_func(x, get_hessian=False):
     a = np.array([-2,2])
     if get_hessian:
         return np.matmul(a.T, x), a, np.zeros(shape=(2, 2)), np.zeros((2,2))
-    return np.matmul(a.T, x), a
+    return np.matmul(a.T, x), a, None
