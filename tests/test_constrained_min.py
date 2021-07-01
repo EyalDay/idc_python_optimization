@@ -1,10 +1,24 @@
 import unittest
+import logging
 import numpy as np
 from functools import partial
 from src import constrained_min
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
+from src.utils import plot_obj_value
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s',
+    filename='test_report.txt',
+    filemode='w'
+)
+
+logger = logging.getLogger(__name__)
+# logger.setLevel(logging.DEBUG)
+# logger.addHandler(logging.FileHandler())
+# logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class TestConstrainedMin(unittest.TestCase):
@@ -44,6 +58,12 @@ class TestConstrainedMin(unittest.TestCase):
         return ret_v, ret_grad, ret_hess
 
     def test_qp(self):
+        # Initial interior point 0.1,.02,0.7
+        x0 = np.array([0.1, 0.2, 0.7]).reshape(-1, 1)
+
+        logger.info(f'Testing function constrained quadratic function with parameters:\n'
+                    f'initial point {x0}\n')
+
         # https://www.wolframalpha.com/input/?i=minimize+x%5E2%2By%5E2%2B%28z%2B1%29%5E2+subject+to+x%2By%2Bz%3D1+and+x%3E%3D0+and+y%3E%3D0+and+z%3E%3D0+
         a = np.array([-1, 0, 0]).reshape(3, 1)
         # Inequality constraints: -xi < 0 for i=0,1,2 -> xi >= 0 as asked
@@ -53,14 +73,15 @@ class TestConstrainedMin(unittest.TestCase):
         # In this case we have m=1 constraints
         eq_constraints_mat = np.array([1, 1, 1]).reshape(1, 3)
         eq_constraints_rhs = np.array(1)
-        # Initial interior point 0.1,.02,0.7
-        x0 = np.array([0.1, 0.2, 0.7]).reshape(-1, 1)
+
 
         # Function: x1^2 + x2^2 +(x3+1)^2 = x1^2 + x2^2 +x3^2 + 2x3 + 1
         f = partial(TestConstrainedMin.quad_func, a=np.identity(3), b=np.array([0, 0, 2]).reshape((-1, 1)), c=1,
                     get_hessian=True)
         path = constrained_min.interior_pt(f, ineq_constraints,
                                            eq_constraints_mat, eq_constraints_rhs, x0)
+
+        plot_obj_value(func='Constrained quadratic', method='', Y=[pt[1] for pt in path   ])
 
         pts = [p[0] for p in path]
         fig = plt.figure()
@@ -99,6 +120,10 @@ class TestConstrainedMin(unittest.TestCase):
         plt.legend()
         plt.savefig('test_qp.png')
         #plt.show()
+        logger.info(f'Done testing function constrained quadratic function.'
+                    f' {len(path)} iterations.\n'
+                    f'Last point is {end}')
+
 
     def test_lp(self):
         ineq_constraints = [
@@ -110,18 +135,20 @@ class TestConstrainedMin(unittest.TestCase):
         eq_constraints_mat = None
         eq_constraints_rhs = None
         x0 = np.array([0.5, 0.75]).reshape(-1, 1)
-        f = partial(TestConstrainedMin.linear_func, a=np.array([1, 1]).reshape(-1, 1))
+        logger.info(f'Testing function constrained quadratic function with parameters:\n'
+                    f'initial point {x0}\n')
+
+        f = partial(TestConstrainedMin.linear_func, a=np.array([-1, -1]).reshape(-1, 1))
 
         path = constrained_min.interior_pt(f=f, ineq_constraints=ineq_constraints,
                                            eq_constraints_mat=eq_constraints_mat, eq_constraints_rhs=eq_constraints_rhs,
                                            x0=x0)
 
-
+        plot_obj_value(func='Constrained linear', method='', Y=[pt[1] for pt in path])
         x_lims = (0-0.1,2+0.1)
         y_lims = (0-0.1,1+0.1)
 
         pts = [pt[0] for pt in path]
-        print(path)
         X = [pt[0].item() for pt in pts]
         Y = [pt[1].item() for pt in pts]
         plt.figure()
@@ -141,12 +168,10 @@ class TestConstrainedMin(unittest.TestCase):
 
         # Mark the starting point
         start = pts[0]
-        print('start', start)
         plt.scatter(x=[start[0].item()], y=[start[1].item()],
                    label=f'start ({start[0].item():.3f}, {start[1].item():.3f}', color='green')
         # Mark the finishing point
         end = pts[-1]
-        print('end', end)
 
         plt.scatter(x=[end[0].item()], y=[end[1].item()],
                    label=f'end ({end[0].item():.3f}, {end[1].item():.3f}', color='red')
@@ -162,3 +187,7 @@ class TestConstrainedMin(unittest.TestCase):
         plt.savefig('test_lp.png')
 
         #plt.show()
+        logger.info(f'Done testing function constrained quadratic function.'
+                    f' {len(path)} iterations.\n'
+                    f'Last point is {end}')
+

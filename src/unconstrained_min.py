@@ -13,12 +13,14 @@ def grad_dir(current_grad,
     return -1 * current_grad
 
 
-def newton_dir(current_hess, current_grad):
+def newton_dir(current_hess, current_grad,
+            **ignore):  # **ignore is so the dir functions will have a uniform interface. Helps simplify the main loop.
     return np.linalg.solve(current_hess, -1 * current_grad)
 
 
-def bfgs_dir(current_hess, current_grad):
-    return np.linalg.solve(current_hess, -1 * current_grad)
+def bfgs_dir(current_grad, Bk,
+             **ignore):  # **ignore is so the dir functions will have a uniform interface. Helps simplify the main loop.
+    return np.linalg.solve(Bk, -1 * current_grad)
 
 
 def update_Bk(Bk, current_point, next_point, current_grad, next_grad):
@@ -36,7 +38,7 @@ def wolfe_condition(f, current_point, pk, init_step_len=1.0, slope_ratio=1e-4, b
         """
         Checks if the 1st Wolfe condition is satisfied.
         """
-        fk_1, _, _ = f(current_point + step_len * pk)
+        fk_1, _, _= f(current_point + step_len * pk)
         fk, grad_fk, _ = f(current_point)
         return fk_1 <= fk + slope_ratio * step_len * grad_fk.T @ pk
 
@@ -74,8 +76,8 @@ def line_search(f, x0, obj_tol, param_tol, max_iter, dir_selection_method='gd', 
     iterations = 1
     get_hessian = (dir_selection_method != 'gd')  # Indicates whether the hessian should be computed
     f = partial(f, get_hessian=get_hessian)
-    current_val, current_grad, current_hessian = f(current_point)
-    Bk = current_hessian
+    current_val, current_grad, current_hess = f(current_point)
+    Bk = current_hess
     dir_func = DIR_METHOD_DICT.get(dir_selection_method, None)
 
     if not dir_func:
@@ -91,7 +93,7 @@ def line_search(f, x0, obj_tol, param_tol, max_iter, dir_selection_method='gd', 
         X1.append(current_point[0])
         X2.append(current_point[1])
 
-        pk = dir_func(current_grad=current_grad, current_hess=current_hessian)
+        pk = dir_func(current_grad=current_grad, current_hess=current_hess, Bk=Bk)
         alpha = wolfe_condition(f=f, current_point=current_point, pk=pk, init_step_len=init_step_len,
                                 slope_ratio=slope_ratio, back_track_factor=back_track_factor)
 
@@ -130,4 +132,4 @@ def line_search(f, x0, obj_tol, param_tol, max_iter, dir_selection_method='gd', 
             Bk = update_Bk(Bk=Bk, current_point=current_point, next_point=next_point, current_grad=current_grad,
                            next_grad=next_grad)
 
-        current_point, current_val = next_point, next_val
+        current_point, current_val, current_grad, current_hess = next_point, next_val, next_grad, next_hess

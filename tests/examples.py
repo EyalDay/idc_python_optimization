@@ -3,6 +3,8 @@ import numpy as np
 
 def _f(Q, x, get_hessian=False):
     """ Returns xT Q x"""
+    hess = 2 * Q if get_hessian else 2*Q
+    return x.T @ Q @ x, 2 * Q @ x, 2 * Q
     res = np.matmul(x.T, Q)
     res = np.matmul(res, x)
 

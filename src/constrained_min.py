@@ -12,6 +12,7 @@ def interior_pt(f, ineq_constraints, eq_constraints_mat, eq_constraints_rhs, x0,
     m, t, eps = len(ineq_constraints), 1, 1e-6
     path = list()
     current_point = x0
+    outer_iterations = 0
     while m / t > eps:  # Lecture 9, slides 12 - 15
         lambda_x = 100 * eps
         iterations = 0
@@ -33,6 +34,9 @@ def interior_pt(f, ineq_constraints, eq_constraints_mat, eq_constraints_rhs, x0,
             if iterations > 50 or alpha < eps:
                 break
 
+        #def report_step(i, x_i, x_i_1, fxi, fxi1, f, method):
+        report_step(i=outer_iterations, x_i=current_point, fxi=y, method='Interior point')
+        outer_iterations+=1
         path.append((current_point, y, 'outer'))
         t *= 10  # increase by a factor of 10 in each outer iteration
 
@@ -53,6 +57,14 @@ def barrier_constraint(constraint, current_point):
 
 
 def barrier_func(current_point, t, f, ineq_constraints):
+    """
+
+    :param current_point:
+    :param t:
+    :param f:
+    :param ineq_constraints:
+    :return:
+    """
     y, grad, hess = f(x=current_point)
     y, grad, hess = t * y, t * grad, t * hess
     for constraint in ineq_constraints:
